@@ -1,5 +1,6 @@
 
 // ai agent with open ai and vercel sdk
+
 /* import {
     Message as VercelChatMessage,
     StreamingTextResponse,
@@ -13,13 +14,14 @@ import { Document } from 'langchain/document';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 
 export const dynamic = 'force-dynamic'
-
+export const maxDuration = 300;
 export const runtime = 'edge';
 
 const formatMessage = (message: VercelChatMessage) => {
     return `${message.role}: ${message.content}`;
 };
 
+// Adjusted template with a clear instruction
 const TEMPLATE = `Answer the user's questions based only on the following context. If the answer is not in the context, reply politely that you do not have that information available.:
 ==============================
 Context: {context}
@@ -29,63 +31,108 @@ Current conversation: {chat_history}
 user: {question}
 assistant:`;
 
-export async function POST(req: Request) {
-    const { messages, documentContent } = await req.json();
+// Utility function to extract relevant chunks based on keyword matching
+const getRelevantChunks = (chunks: Document[], question: string, maxTokens: number = 3000) => {
+    const relevantChunks = chunks.filter(chunk =>
+        chunk.pageContent.toLowerCase().includes(question.toLowerCase())
+    );
 
-    const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
-    const currentMessageContent = messages[messages.length - 1].content;
+    // Sort by relevance (longer relevant chunks come first)
+    relevantChunks.sort((a, b) => b.pageContent.length - a.pageContent.length);
 
-    if (!documentContent) {
-        return new Response(JSON.stringify({ error: "No document content provided" }), { status: 400 });
+    // Limit total tokens sent to avoid exceeding the token limit
+    let tokenCount = 0;
+    const limitedChunks: string[] = [];
+    for (const chunk of relevantChunks) {
+        const chunkTokens = chunk.pageContent.length / 4; // Rough estimate: 1 token ~ 4 characters
+        if (tokenCount + chunkTokens > maxTokens) break;
+        tokenCount += chunkTokens;
+        limitedChunks.push(chunk.pageContent);
     }
 
-    // Create a Document object
-    const doc = new Document({ pageContent: documentContent });
+    return limitedChunks.join('\n');
+};
 
-    // Split the document into chunks
-    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 200 });
-    const docs = await textSplitter.splitDocuments([doc]);
+export async function POST(req: Request) {
+    try {
+        const { messages, documentContent } = await req.json();
 
-    const prompt = PromptTemplate.fromTemplate(TEMPLATE);
+        if (!documentContent) {
+            return new Response(JSON.stringify({ error: "No document content provided" }), { status: 400 });
+        }
 
-    const model = new ChatOpenAI({
-        apiKey: process.env.OPENAI_API_KEY!,
-        model: 'gpt-3.5-turbo',
-        temperature: 0,
-        streaming: true,
-        verbose: false,
-    });
+        // Format conversation history
+        const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
+        const currentMessageContent = messages[messages.length - 1].content;
 
-    const parser = new HttpResponseOutputParser();
+        // Create a Document object
+        const doc = new Document({ pageContent: documentContent });
 
-    const chain = RunnableSequence.from([
-        {
-            question: (input) => input.question,
-            chat_history: (input) => input.chat_history,
-            context: (input) => input.context,
-        },
-        prompt,
-        model,
-        parser,
-    ]);
+        // Split the document into manageable chunks
+        const textSplitter = new RecursiveCharacterTextSplitter({
+            chunkSize: 1000,
+            chunkOverlap: 200
+        });
+        const docs = await textSplitter.splitDocuments([doc]);
 
-    const stream = await chain.stream({
-        chat_history: formattedPreviousMessages.join('\n'),
-        question: currentMessageContent,
-        context: docs.map(d => d.pageContent).join('\n'),
-    });
+        // Select the most relevant document chunks based on the user's question
+        const relevantContext = getRelevantChunks(docs, currentMessageContent);
 
-    return new StreamingTextResponse(
-        stream.pipeThrough(createStreamDataTransformer()),
-    );
-} */
+        // Ensure relevant context was extracted
+        if (!relevantContext) {
+            return new Response(JSON.stringify({
+                error: "Could not find relevant context from the document."
+            }), { status: 400 });
+        }
+
+        const prompt = PromptTemplate.fromTemplate(TEMPLATE);
+
+        const model = new ChatOpenAI({
+            apiKey: process.env.OPENAI_API_KEY!,
+            model: 'gpt-3.5-turbo',
+            temperature: 0,
+            streaming: true,
+            verbose: false,
+        });
+
+        const parser = new HttpResponseOutputParser();
+
+        // Chain to handle question, history, context, and prompt processing
+        const chain = RunnableSequence.from([
+            {
+                question: (input) => input.question,
+                chat_history: (input) => input.chat_history,
+                context: (input) => input.context,
+            },
+            prompt,
+            model,
+            parser,
+        ]);
+
+        // Stream response based on the extracted context and question
+        const stream = await chain.stream({
+            chat_history: formattedPreviousMessages.join('\n'),
+            question: currentMessageContent,
+            context: relevantContext,
+        });
+
+        // Return the streaming response
+        return new StreamingTextResponse(
+            stream.pipeThrough(createStreamDataTransformer()),
+        );
+    } catch (error) {
+        console.error('Error processing request:', error);
+        return new Response(JSON.stringify({ error: "Something went wrong while processing the request." }), { status: 500 });
+    }
+}
+ */
 
 
 
 
 
 
-// ai agent with llama ai and vercel sdk
+// ai agent with llama model using vercel sdk and GROQ provider
 import { createOpenAI as createGroq } from '@ai-sdk/openai'
 import { streamText, convertToCoreMessages, Message } from 'ai';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
@@ -93,6 +140,7 @@ import { nanoid } from 'nanoid';
 
 export const maxDuration = 300;
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic'
 
 const groq = createGroq({
     baseURL: 'https://api.groq.com/openai/v1',
