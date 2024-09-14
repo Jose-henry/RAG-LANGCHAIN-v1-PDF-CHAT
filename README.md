@@ -13,9 +13,9 @@
 ---
 
 ### Description
-/ this will take you to the webpage where you can interact with the ai bot as you wish. 
+"/" this will take you to the webpage where you can interact with the ai bot as you wish. 
 In chat.tsx, change the api route btw chat[1-4] to get a more processed response. chat4 has RAG implementation to update the ai based on our own data.
-/docss webpage provides a means to upload pdf and chat with it
+"/docss" webpage provides a means to upload pdf and chat with it
 
 ---
 
