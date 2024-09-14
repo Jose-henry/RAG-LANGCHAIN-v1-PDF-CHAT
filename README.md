@@ -20,16 +20,16 @@ In chat.tsx, change the api route btw chat[1-4] to get a more processed response
 
 ### ⚙ Usage
 
-- Provide your own .env.local file with an OpenAI API key or LLAMA key
-- npm install
+- Provide your own .env.local file with an OpenAI API key or GROQ key for LLAMA model usage.
+- npm install --legacy-peer-deps or npm install --force
 - npm run dev
 
 ---
 
-### 📚 Tutorial References
+### 📚 Documentation References
 
 - 🔗 [Next.js](https://nextjs.org/)
 - 🔗 [Vercel AI SDK](https://sdk.vercel.ai/docs)
 - 🔗 [OpenAI](https://openai.com/)
 - 🔗 [shadcn/ui](https://ui.shadcn.com/)
-- 🔗 [Next.js Light & Dark Modes](https://www.davegray.codes/posts/light-dark-mode-nextjs-app-router-tailwind)
+- 🔗 [META-LLAMA](https://llama.meta.com/docs/get-started/)
