@@ -1,4 +1,4 @@
-# Next.js AI Chat
+# AI Chat with Nextjs, Langchain and RAG
 ---
 
 ### Author Links
@@ -6,9 +6,8 @@
 👋 Hello, I'm Joseph Henry.
 
 🚀 Follow Me:
-
-- [Twitter]([https://twitter.com/yesdavidgray](https://x.com/pres_xi_dence)
-- [LinkedIn]([https://www.linkedin.com/in/davidagray/](https://www.linkedin.com/in/joseph-c-henry)
+- [Twitter]([https://x.com/pres_xi_dence]
+- [LinkedIn]([https://www.linkedin.com/in/joseph-c-henry]
 
 ---
 
