@@ -3,41 +3,27 @@
 
 ### Author Links
 
-👋 Hello, I'm Dave Gray.
-
-📚 [My Courses](https://courses.davegray.codes/)
-
-✅ [Check out my YouTube Channel with hundreds of tutorials](https://www.youtube.com/DaveGrayTeachesCode).
-
-🚩 [Subscribe to my channel](https://bit.ly/3nGHmNn)
-
-💖 [Support My Content](https://patreon.com/davegray)
+👋 Hello, I'm Joseph Henry.
 
 🚀 Follow Me:
 
-- [Twitter](https://twitter.com/yesdavidgray)
-- [LinkedIn](https://www.linkedin.com/in/davidagray/)
-- [Blog](https://davegray.codes)
+- [Twitter]([https://twitter.com/yesdavidgray](https://x.com/pres_xi_dence)
+- [LinkedIn]([https://www.linkedin.com/in/davidagray/](https://www.linkedin.com/in/joseph-c-henry)
 
 ---
 
 ### Description
-
-📺 [YouTube Video](https://youtu.be/xF-BL8XF4mg) for this repository.
+/ this will take you to the webpage where you can interact with the ai bot as you wish. 
+In chat.tsx, change the api route btw chat[1-4] to get a more processed response. chat4 has RAG implementation to update the ai based on our own data.
+/docss webpage provides a means to upload pdf and chat with it
 
 ---
 
 ### ⚙ Usage
 
-- Provide your own .env.local file with an OpenAI API key
+- Provide your own .env.local file with an OpenAI API key or LLAMA key
 - npm install
 - npm run dev
-
----
-
-### 🎓 Academic Honesty
-
-**DO NOT COPY FOR AN ASSIGNMENT** - Avoid plagiarism and adhere to the spirit of this [Academic Honesty Policy](https://www.freecodecamp.org/news/academic-honesty-policy/).
 
 ---
 
