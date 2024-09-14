@@ -33,3 +33,5 @@ In chat.tsx, change the api route btw chat[1-4] to get a more processed response
 - 🔗 [OpenAI](https://openai.com/)
 - 🔗 [shadcn/ui](https://ui.shadcn.com/)
 - 🔗 [META-LLAMA](https://llama.meta.com/docs/get-started/)
+- 🔗 [LANGCHAIN-Version0.1](https://js.langchain.com/v0.1/docs/get_started/introduction/)
+- 🔗 [LANGCHAIN-Version0.2](https://js.langchain.com/v0.2/docs/introduction/)
